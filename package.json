@@ -1,0 +1,15 @@
+{
+  "name": "valentine-astro",
+  "version": "1.0.0",
+  "description": "Un site mignon pour demander à ma copine d'être ma Valentine",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "npm run build && git add . && git commit -m 'Deploy Valentine Site' && git push"
+  },
+  "dependencies": {
+    "astro": "^5.17.1"
+  }
+}

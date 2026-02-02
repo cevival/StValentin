@@ -1,0 +1,32 @@
+# Dépendances (ne jamais envoyer ça sur GitHub, c'est trop lourd)
+node_modules/
+
+# Dossier de production (généré automatiquement quand tu construis le site)
+dist/
+
+# Dossier de cache et types générés par Astro
+.astro/
+
+# Variables d'environnement (Mots de passe, clés API... TRÈS IMPORTANT à cacher)
+.env
+.env.*
+!.env.example
+
+# Logs d'erreurs (npm, yarn, pnpm)
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Fichiers système (Mac/Windows)
+.DS_Store
+Thumbs.db
+
+# Editeurs de code (VS Code etc - optionnel mais recommandé)
+.vscode/
+.idea/
+*.suo
+*.ntvs
+*.njsproj
+*.sln
+*.sw?

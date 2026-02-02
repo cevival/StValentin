@@ -1,0 +1,164 @@
+---
+// Layout.astro - Disposition principale
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = "Valentine - Les étoiles se sont alignées" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Une demande spéciale pour Saint Valentin" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    
+    <!-- Google Fonts pour les polices kawaii -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Varela+Round&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- 🌟 Conteneur des étoiles scintillantes -->
+    <div class="stars-container">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
+
+    <!-- 📦 Contenu principal -->
+    <div class="container">
+      <slot />
+    </div>
+
+    <!-- 🎊 Élément de message de succès -->
+    <div id="successMessage" class="success-message">
+      <div class="success-box">
+        <div class="heart-animation">💖</div>
+        <div class="success-text">Je le savais ! ✨</div>
+        <div class="success-subtext">Tu as rendu le jour le plus beau! 🌹</div>
+        <div class="fireworks"></div>
+      </div>
+    </div>
+
+    <script is:inline>
+      // 🎯 Fonction pour générer des confettis
+      function createConfetti() {
+        const confettiCount = 30;
+        const confettiTypes = ['💖', '✨', '⭐', '💕', '🌟'];
+
+        for (let i = 0; i < confettiCount; i++) {
+          const confetti = document.createElement('div');
+          confetti.className = Math.random() > 0.5 ? 'confetti heart' : 'confetti star';
+          confetti.textContent = confettiTypes[Math.floor(Math.random() * confettiTypes.length)];
+          
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * window.innerHeight - window.innerHeight;
+          
+          confetti.style.left = x + 'px';
+          confetti.style.top = y + 'px';
+          confetti.style.setProperty('--angle', Math.random() * 360 + 'deg');
+          
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 3000);
+        }
+      }
+
+      // ✅ Gestionnaire du bouton OUI
+      function handleYes() {
+        const successMessage = document.getElementById('successMessage');
+        successMessage.classList.add('show');
+        createConfetti();
+        
+        // Masquer le conteneur de la carte
+        const container = document.querySelector('.container');
+        container.style.animation = 'fadeOut 0.5s ease-out forwards';
+        
+        setTimeout(() => {
+          container.style.display = 'none';
+        }, 500);
+      }
+
+      // ❌ Gestionnaire du bouton NON (qui fuit!)
+      function handleNo(event) {
+        const button = event.target;
+        
+        // S'assurer que le bouton a une position fixe
+        if (button.style.position !== 'fixed') {
+          button.style.position = 'fixed';
+          button.style.zIndex = '50';
+          // Positionner le bouton à sa position initiale dans la viewport
+          const rect = button.getBoundingClientRect();
+          button.style.left = rect.left + 'px';
+          button.style.top = rect.top + 'px';
+        }
+        
+        // Récupérer les dimensions actuelles du bouton
+        const buttonWidth = button.offsetWidth;
+        const buttonHeight = button.offsetHeight;
+        
+        // Générer une position aléatoire en gardant le bouton visible
+        // On ajoute des marges pour éviter que le bouton sorte de l'écran
+        const margin = 10;
+        const maxX = window.innerWidth - buttonWidth - margin;
+        const maxY = window.innerHeight - buttonHeight - margin;
+        
+        // S'assurer que la position est positive
+        const randomX = Math.max(margin, Math.random() * maxX);
+        const randomY = Math.max(margin, Math.random() * maxY);
+        
+        // Appliquer la position directement
+        button.style.left = randomX + 'px';
+        button.style.top = randomY + 'px';
+        button.style.transition = 'all 0.3s ease-out';
+      }
+
+      // 🎨 Initialisation au chargement
+      document.addEventListener('DOMContentLoaded', function() {
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+
+        if (yesBtn) {
+          yesBtn.addEventListener('click', handleYes);
+          yesBtn.classList.add('active');
+        }
+
+        if (noBtn) {
+          noBtn.addEventListener('mouseenter', handleNo);
+          noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleNo(e);
+          });
+          
+          // Sur mobile, ajouter un gestionnaire de touch
+          noBtn.addEventListener('touchstart', handleNo);
+        }
+      });
+
+      // Animation fadeOut supplémentaire
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>
